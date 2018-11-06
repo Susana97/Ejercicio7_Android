@@ -116,6 +116,13 @@ public class MainActivity extends AppCompatActivity {
                                 if (progressDoalog.getProgress() == progressDoalog
                                         .getMax()) {
                                     progressDoalog.dismiss();
+
+                                    runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast mensaje = Toast.makeText(getApplicationContext(), "Se ha enviado correctamente", Toast.LENGTH_SHORT);
+                                            mensaje.show();
+                                        }
+                                    });
                                 }
                             }
                         } catch (Exception e) {
@@ -127,9 +134,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-    /*Toast mensaje = Toast.makeText(getApplicationContext(), "Se ha enviado correctamente", Toast.LENGTH_SHORT);
-                                    mensaje.show(); */
 
     private void checkPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
