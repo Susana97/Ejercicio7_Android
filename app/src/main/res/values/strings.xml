@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Enviar Perfil</string>
+    <string name="titulo">ENVIAR PERFIL PERSONAL</string>
+    <string name="tipo_usuario">Tipo de usuario: </string>
+    <string name="usu_normal">Normal</string>
+    <string name="usu_avanz">Avanzado</string>
+    <string name="usu_admin">Administrador</string>
+    <string name="descripcion">Descripción:</string>
+    <string name="descripcion_text">Escribe tu descripción aquí...</string>
+    <string name="btn_enviar">Enviar</string>
+    <string name="solic_perm">Solicitando permisos...</string>
+    <string name="perm_conc">Los permisos han sido concedidos!</string>
+    <string name="perm_Noconc">Los permisos no han sido concedidos!</string>
+    <string name="perm_Noconc2">Por favor, habilite los permisos</string>
+    <string name="enviando">Enviando...</string>
+    <string name="cancelado">Se ha cancelado el envio</string>
+    <string name="okenv">Se ha enviado correctamente!!</string>
+    <string name="cancel">Cancelar</string>
 </resources>

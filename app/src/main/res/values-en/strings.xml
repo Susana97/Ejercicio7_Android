@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Send Profile</string>
+    <string name="titulo">SEND PERSONAL PROFILE</string>
+    <string name="tipo_usuario">Type of user: </string>
+    <string name="usu_normal">Normal</string>
+    <string name="usu_avanz">Advanced</string>
+    <string name="usu_admin">Administrator</string>
+    <string name="descripcion">Description:</string>
+    <string name="descripcion_text">Write your description here ...</string>
+    <string name="btn_enviar">submit</string>
+    <string name="solic_perm">Requesting permits ...</string>
+    <string name="perm_conc">The permits have been granted!</string>
+    <string name="perm_Noconc">The permits have not been granted!</string>
+    <string name="perm_Noconc2">Please, enable the request permission</string>
+    <string name="enviando">Sending...</string>
+    <string name="cancelado">Shipping has been canceled</string>
+    <string name="okenv">It has been sent correctly !!</string>
+    <string name="cancel">Cancel</string>
+</resources>

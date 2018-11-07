@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Environment;
 
@@ -44,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDoalog;
     private Handler handle;
     private Button botonEnviar;
+    private TextView textViewPrincipal;
+    private TextView textViewTipoUsr;
+    private TextView textViewDescrip;
     private boolean terminado = false;
 
     @Override
@@ -51,13 +55,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String normal = getResources().getString(R.string.usu_normal);
+        String avanzado = getResources().getString(R.string.usu_avanz);
+        String admin = getResources().getString(R.string.usu_admin);
+
+
         botonImagenes = (ImageButton) findViewById(R.id.imageButtonSeleccionar);
         botonEnviar = (Button) findViewById(R.id.buttonEnviar);
         textoDescripcion = (EditText) findViewById(R.id.editTextDesc);
         listaTiposUsuarios = new ArrayList<String>();
-        listaTiposUsuarios.add("Normal");
-        listaTiposUsuarios.add("Avanzado");
-        listaTiposUsuarios.add("Administrador");
+        listaTiposUsuarios.add(normal);
+        listaTiposUsuarios.add(avanzado);
+        listaTiposUsuarios.add(admin);
 
         adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
                 listaTiposUsuarios);
@@ -66,13 +75,73 @@ public class MainActivity extends AppCompatActivity {
         adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tiposUsuarios.setAdapter(adaptador);
 
+        String tvPrinc = getResources().getString(R.string.titulo);
+        textViewPrincipal = (TextView)findViewById(R.id.TextViewPrincipal);
+        textViewPrincipal.setText(tvPrinc);
+
+        String tipoUsr = getResources().getString(R.string.tipo_usuario);
+        textViewTipoUsr = (TextView)findViewById(R.id.textViewTipoUsr);
+        textViewTipoUsr.setText(tipoUsr);
+
+        String tv_desc = getResources().getString(R.string.descripcion);
+        textViewDescrip = (TextView)findViewById(R.id.textViewDesc);
+        textViewDescrip.setText(tv_desc);
+
+        String et_desc = getResources().getString(R.string.descripcion_text);
+        textoDescripcion = (EditText)findViewById(R.id.editTextDesc);
+        textoDescripcion.setHint(et_desc);
+
+        String btn_enviar = getResources().getString(R.string.btn_enviar);
+        botonEnviar = (Button)findViewById(R.id.buttonEnviar);
+        botonEnviar.setText(btn_enviar);
+
         botonImagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkPermission();
+                // comprobar version actual de android que estamos corriendo
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                    // Comprobar si ha aceptado, no ha aceptado, o nunca se le ha preguntado
+                    if (CheckPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        // Ha aceptado
+                        Intent i = new Intent(
+                                Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                            return;
+                        startActivity(i);
+                    } else {
+                        // Ha denegado o es la primera vez que se le pregunta
+                        if (!shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                            // No se le ha preguntado aún
+                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_FROM_GALLERY);
+                        } else {
+                            // Ha denegado
+                            String toastDecline2 = getResources().getString(R.string.perm_Noconc2);
+                            Toast.makeText(MainActivity.this, toastDecline2, Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            i.addCategory(Intent.CATEGORY_DEFAULT);
+                            i.setData(Uri.parse("package:" + getPackageName()));
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                            startActivity(i);
+                        }
+                    }
+                } else {
+                    OlderVersions();
+                }
+
+            }
+
+            private void OlderVersions() {
                 Intent i = new Intent(
                         Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                    openGalery();
+                } else {
+                    String toastDecline = getResources().getString(R.string.perm_Noconc);
+                    Toast.makeText(MainActivity.this, toastDecline, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -82,16 +151,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 progressDoalog = new ProgressDialog(MainActivity.this);
                 progressDoalog.setMax(100);
-                progressDoalog.setMessage("Enviando....");
+                String enviando = getResources().getString(R.string.enviando);
+                progressDoalog.setMessage(enviando);
 
                 progressDoalog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progressDoalog.setCancelable(false);
                 terminado = true;
-                progressDoalog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+                String cancel = getResources().getString(R.string. cancel);
+                progressDoalog.setButton(DialogInterface.BUTTON_NEGATIVE, cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        Toast mensaje = Toast.makeText(getApplicationContext(), "Se ha cancelado el envio", Toast.LENGTH_SHORT);
+                        String cancelado = getResources().getString(R.string. cancelado);
+                        Toast mensaje = Toast.makeText(getApplicationContext(), cancelado, Toast.LENGTH_SHORT);
                         mensaje.show();
                     }
                 });
@@ -119,7 +191,8 @@ public class MainActivity extends AppCompatActivity {
 
                                     runOnUiThread(new Runnable() {
                                         public void run() {
-                                            Toast mensaje = Toast.makeText(getApplicationContext(), "Se ha enviado correctamente", Toast.LENGTH_SHORT);
+                                            String enviadoOK = getResources().getString(R.string. okenv);
+                                            Toast mensaje = Toast.makeText(getApplicationContext(), enviadoOK, Toast.LENGTH_SHORT);
                                             mensaje.show();
                                         }
                                     });
@@ -136,23 +209,27 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        String permission = permissions[0];
+        int result = grantResults[0];
 
-    private void checkPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            Toast.makeText(this, "Esta versión no es Android 6 o posterior. " + Build.VERSION.SDK_INT,
-                    Toast.LENGTH_LONG).show();
-        } else {
-            int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-            if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        PICK_FROM_GALLERY);
-                Toast.makeText(this, "Solicitando permisos", Toast.LENGTH_LONG).show();
-            } else if (hasWriteContactsPermission == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Los permisos ya han sido concedidos", Toast.LENGTH_LONG).show();
+        if (permission.equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            // Comprobar si ha sido aceptado o denegado la petición de permiso
+            if (result == PackageManager.PERMISSION_GRANTED) {
+                // Concedió su permiso
+                String concedido = getResources().getString(R.string. perm_conc);
+                Toast.makeText(this, concedido, Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(
+                        Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) return;
                 openGalery();
             }
+            else {
+                // No concendió su permiso
+                String noconcedido = getResources().getString(R.string. perm_Noconc);
+                Toast.makeText(MainActivity.this, noconcedido, Toast.LENGTH_SHORT).show();
+            }
         }
-        return;
     }
 
     @Override
@@ -175,6 +252,11 @@ public class MainActivity extends AppCompatActivity {
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
 
         }
+    }
+
+    private boolean CheckPermission(String permission) {
+        int result = this.checkCallingOrSelfPermission(permission);
+        return result == PackageManager.PERMISSION_GRANTED;
     }
 
     private void openGalery () {

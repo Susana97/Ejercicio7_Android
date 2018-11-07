@@ -14,12 +14,10 @@
         android:layout_marginLeft="50dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="50dp"
-        android:text="ENVIAR PERFIL PERSONAL"
         android:textAlignment="center"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
-        android:textStyle="bold"
-        tools:text="ENVIAR PERFIL PERSONAL" />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +55,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:text="Tipo de usuario:"
         android:textColor="@android:color/background_dark"
         android:textSize="16dp"
         android:textStyle="bold" />
@@ -75,7 +72,6 @@
         android:id="@+id/textViewDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Descripción:"
         android:layout_marginLeft="20dp"
         android:textColor="@android:color/background_dark"
         android:textSize="16sp"
@@ -103,7 +99,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="90dp"
         android:background="@android:color/holo_orange_light"
-        android:text="Enviar"
+        android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         android:textStyle="bold" />
 
